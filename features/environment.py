@@ -13,7 +13,7 @@ def before_all(context):
 
 
 def after_all():
-    send_email('')
+    send_email('') #Указать кому необходимо отправлять письмо
     screens_directory = os.path.abspath("Screenshots")
     for image in os.listdir(screens_directory):
         os.remove(os.path.join(screens_directory, image))
