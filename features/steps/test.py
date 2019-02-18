@@ -26,13 +26,23 @@ def step_impl(context, text):
 
 @when('Нажимаем на кнопку "{button_name}"')
 def step_impl(context, button_name):
-    page = google_page.GooglePage(context)
-    page.find_info(button_name)
+    locator = {
+        'google_url': "https://www.google.ru",
+        'cb_url': "https://www.cbr.ru/"
+    }
+    if context.browser.current_url.startswith(locator['google_url']):
+        page = google_page.GooglePage(context)
+        page.find_info(button_name)
+    elif context.browser.current_url.startswith(locator['cb_url']):
+        page = cb_page.CbPage(context)
+        page.menu(button_name)
+
 
 @then('Нашли ссылку "{site}"')
 def step_impl(context, site):
     page = google_page.GooglePage(context)
-    page.find_url(site)
+    if not page.find_url(site):
+        context.scenario.skip()
 
 
 @then("Проверяем, что зашли на нужный сайт")
@@ -70,44 +80,30 @@ def step_impl(context):
     screen = ImageGrab.grab()
     screen.save(f"{os.path.relpath('Screenshots')}\\{datetime.today().hour} {datetime.today().minute} "
                 f"{datetime.today().second}.jpg")
-#
-#
-#
-#@step('Нажимаем на раздел {section}')
-#def step_impl(context, section):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: And Нажимаем на раздел "О сайте"')
-#
-#
-#@when("Запоминаем текст предупреждения")
-#def step_impl(context):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: When Запоминаем текст предупреждения')
-#
-#
-#@step('Меняем язык страницы на {language}')
-#def step_impl(context, language):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: And Меняем язык страницы на "en"')
-#
-#
-#@when('Нажимаем на кнопку {button_name}')
-#def step_impl(context, button_name):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: When Нажимаем на кнопку "Три полоски"')
-#
-#
-#@step('Нажимаем на ссылку {url_text}')
-#def step_impl(context, url_text):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: And Нажимаем на ссылку "Предупреждение"')
+
+
+@step('Нажимаем на раздел "{section}"')
+def step_impl(context, section):
+    page = cb_page.CbPage(context)
+    page.open_section(section)
+
+
+@when("Запоминаем текст предупреждения")
+def step_impl(context):
+    page = cb_page.CbPage(context)
+    context.alarm_text = page.alarm_text()
+
+
+@step('Меняем язык страницы на "{language}"')
+def step_impl(context, language):
+    page = cb_page.CbPage(context)
+    page.change_language(language)
+
+
+@when("Проверили, что текст отличается от запомненного текста ранее")
+def step_impl(context):
+    page = cb_page.CbPage(context)
+    context.new_alarm_text = page.alarm_text()
+    if context.new_alarm_text == context.alarm_text:
+        print('Текст не изменился')
+        context.scenario.skip()
