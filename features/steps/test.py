@@ -37,38 +37,39 @@ def step_impl(context, site):
 
 @then("Проверяем, что зашли на нужный сайт")
 def step_impl(context):
-    print(context.browser.current_url)
+    if context.browser.current_url != 'https://www.cbr.ru/':
+        context.scenario.skip()
 
 
+@when('Нажимаем на ссылку "{url}"')
+def step_impl(context, url):
+    page = cb_page.CbPage(context)
+    page.open_url(url)
 
-#@when('Открываем раздел {section}')
-#def step_impl(context, section):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: When Открываем раздел "Написать благодарность"')
-#
-#
-#@step('В поле {field} вводим значение {text}')
-#def step_impl(context, field, text):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: And В поле "Ваша благодарность" вводим значение "случайный текст"')
-#
-#
-#@step('Ставим галочку {verification}')
-#def step_impl(context, verification):
-#    """
-#    :type context: behave.runner.Context
-#    """
-#    raise NotImplementedError(u'STEP: And Ставим галочку "Я согласен"')
-#
-#
-#@then("Делаем скриншот")
-#def step_impl(context):
-#    screen = ImageGrab.grab()
-#    screen.save(f"{os.path.abspath('Screenshots')}\\{datetime.time()}.jpg")
+
+@when('Открываем раздел "{section}"')
+def step_impl(context, section):
+    page = cb_page.CbPage(context)
+    page.open_url(section)
+
+
+@step('В поле "{field}" вводим значение "{text}"')
+def step_impl(context, field, text):
+    page = cb_page.CbPage(context)
+    page.write_message(field, text)
+
+
+@step('Ставим галочку "{verification}"')
+def step_impl(context, verification):
+    page = cb_page.CbPage(context)
+    page.check(verification)
+
+
+@then("Делаем скриншот")
+def step_impl(context):
+    screen = ImageGrab.grab()
+    screen.save(f"{os.path.relpath('Screenshots')}\\{datetime.today().hour} {datetime.today().minute} "
+                f"{datetime.today().second}.jpg")
 #
 #
 #
