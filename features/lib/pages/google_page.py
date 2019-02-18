@@ -25,7 +25,8 @@ class GooglePage(BasePage):
                 EC.presence_of_element_located(self.locator[what])
             )
             return True
-        else: return False
+        else:
+            return False
 
     def find_info(self, button_name):
         try:
@@ -45,9 +46,7 @@ class GooglePage(BasePage):
             EC.presence_of_element_located(self.locator[url])
         )
         if element:
-            print("Найдено")
-        else:
-            print("Не найдено")
+            return True
 
 
 
