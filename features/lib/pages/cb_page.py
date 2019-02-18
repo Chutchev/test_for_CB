@@ -8,7 +8,30 @@ import time
 
 class CbPage(BasePage):
 
-    locator={}
+    locator = {
+        'Интернет-приемная': (By.XPATH, '//div[@class="header__extra-inner"]/div/span/a[@href="/Reception/"  '
+                                        'and contains(text(), "Интернет-приемная")]'),
+        'Написать благодарность': (By.XPATH, '//*[@href="/Reception/Message/Register?messageType=Gratitude"]'),
+        'Ваша благодарность': (By.XPATH, '//*[@name="MessageBody"]'),
+        'Я согласен': (By.XPATH, '//*[@type="checkbox" and contains(@data-title, "Согласие")]')
+    }
 
     def __init__(self, context):
         BasePage.__init__(self, context.browser)
+
+    def open_url(self, url):
+        element = WebDriverWait(self.browser, 20).until(
+            EC.presence_of_element_located(self.locator[url])
+        )
+        element.click()
+
+    def write_message(self, field, text):
+        element = WebDriverWait(self.browser, 20).until(
+            EC.presence_of_element_located(self.locator[field])
+        )
+        element.send_keys(text)
+
+    def check(self, chekcbox_text):
+        element = WebDriverWait(self.browser, 20).until(
+            EC.presence_of_element_located(self.locator[chekcbox_text])
+        ).click()
