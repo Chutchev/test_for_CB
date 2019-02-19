@@ -25,31 +25,39 @@ class CbPage(BasePage):
         BasePage.__init__(self, context.browser)
 
     def open_url(self, url):
-        element = WebDriverWait(self.browser, 20).until(
+        wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[url])
         )
+        element = self.find_element(*self.locator[url])
         element.click()
 
     def write_message(self, field, text):
-        element = WebDriverWait(self.browser, 20).until(
+        wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[field])
         )
-        element.send_keys(text)
+        element = self.find_element(*self.locator[field])
+        element.click()
 
-    def check(self, chekcbox_text):
-        element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[chekcbox_text])
-        ).click()
+    def check(self, checkbox_text):
+        wait_element = WebDriverWait(self.browser, 20).until(
+            EC.presence_of_element_located(self.locator[checkbox_text])
+        )
+        element = self.find_element(*self.locator[checkbox_text])
+        element.click()
 
     def menu(self, button):
-        element = WebDriverWait(self.browser, 20).until(
+        wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[button])
-        ).click()
+        )
+        element = self.find_element(*self.locator[button])
+        element.click()
 
     def open_section(self, section):
-        element = WebDriverWait(self.browser, 20).until(
+        wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[section])
-        ).click()
+        )
+        element = self.find_element(*self.locator[section])
+        element.click()
 
     def alarm_text(self):
         element = WebDriverWait(self.browser, 20).until(
@@ -58,6 +66,8 @@ class CbPage(BasePage):
         return element.text
 
     def change_language(self, language):
-        element = WebDriverWait(self.browser, 20).until(
+        wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[language])
-        ).click()
+        )
+        element = self.find_element(*self.locator[language])
+        element.click()
