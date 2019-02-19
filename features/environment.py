@@ -12,8 +12,8 @@ def before_all(context):
     context.browser.maximize_window()
 
 
-def after_all():
-    send_email('') #Указать кому необходимо отправлять письмо
+def after_all(context):
+    send_email('')  # Указать кому необходимо отправлять письмо
     screens_directory = os.path.abspath("Screenshots")
     for image in os.listdir(screens_directory):
         os.remove(os.path.join(screens_directory, image))
