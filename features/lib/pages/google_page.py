@@ -21,7 +21,7 @@ class GooglePage(BasePage):
 
     def check_field(self, what):
         if what in self.locator.keys():
-            element = WebDriverWait(self.browser, 10).until(
+            wait_element = WebDriverWait(self.browser, 10).until(
                 EC.presence_of_element_located(self.locator[what])
             )
             return True
@@ -30,23 +30,27 @@ class GooglePage(BasePage):
 
     def find_info(self, button_name):
         try:
-            element = WebDriverWait(self.browser, 20).until(
+            wait_element = WebDriverWait(self.browser, 20).until(
                 EC.presence_of_element_located(self.locator[button_name])
             )
+            element = self.find_element(*self.locator[button_name])
             element.click()
         except ElementNotVisibleException:
             time.sleep(5)
-            element = WebDriverWait(self.browser, 20).until(
+            wait_element = WebDriverWait(self.browser, 20).until(
                 EC.presence_of_element_located(self.locator[button_name])
             )
+            element = self.find_element(*self.locator[button_name])
             element.click()
 
     def find_url(self, url):
-        element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[url])
-        )
-        if element:
+        try:
+            wait_element = WebDriverWait(self.browser, 20).until(
+                EC.presence_of_element_located(self.locator[url])
+            )
             return True
+        except ElementNotVisibleException:
+            return False
 
 
 
