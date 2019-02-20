@@ -7,7 +7,7 @@ import time
 
 
 class CbPage(BasePage):
-
+    browser = ''
     locator = {
         'Интернет-приемная': (By.XPATH, '//div[@class="header__extra-inner"]/div/span/a[@href="/Reception/"  '
                                         'and contains(text(), "Интернет-приемная")]'),
@@ -23,41 +23,39 @@ class CbPage(BasePage):
 
     def __init__(self, context):
         BasePage.__init__(self, context.browser)
+        self.browser = context.browser
 
+    def click_el(open_url):
+        def wrapper(self, url):
+            wait_element = WebDriverWait(self.browser, 20).until(
+                EC.presence_of_element_located(self.locator[url])
+            )
+            element = self.find_element(*self.locator[url])
+            element.click()
+        return wrapper
+
+    @click_el
     def open_url(self, url):
-        wait_element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[url])
-        )
-        element = self.find_element(*self.locator[url])
-        element.click()
+        print('open_url')
 
     def write_message(self, field, text):
         wait_element = WebDriverWait(self.browser, 20).until(
             EC.presence_of_element_located(self.locator[field])
         )
         element = self.find_element(*self.locator[field])
-        element.click()
+        element.send_keys(text)
 
+    @click_el
     def check(self, checkbox_text):
-        wait_element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[checkbox_text])
-        )
-        element = self.find_element(*self.locator[checkbox_text])
-        element.click()
+        print('check')
 
+    @click_el
     def menu(self, button):
-        wait_element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[button])
-        )
-        element = self.find_element(*self.locator[button])
-        element.click()
+        print('menu')
 
+    @click_el
     def open_section(self, section):
-        wait_element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[section])
-        )
-        element = self.find_element(*self.locator[section])
-        element.click()
+        print('open_section')
 
     def alarm_text(self):
         element = WebDriverWait(self.browser, 20).until(
@@ -65,9 +63,6 @@ class CbPage(BasePage):
         )
         return element.text
 
+    @click_el
     def change_language(self, language):
-        wait_element = WebDriverWait(self.browser, 20).until(
-            EC.presence_of_element_located(self.locator[language])
-        )
-        element = self.find_element(*self.locator[language])
-        element.click()
+        print('change_language')
